@@ -60,8 +60,6 @@ public class Correlator {
     }
 
     public static void main(String[] args) {
-        // TODO: Compute this variance
-
         if (args.length != 3) {
             usage();
         }
@@ -98,43 +96,47 @@ public class Correlator {
             count++;
         }
 
-        int totalWords2 = 0;
+        int totalWords2 = getTotalWordCount(wordCount2);
 
-        DataCount[] data2 = toArray(wordCount2.toString(), totalWords2);
+        double normFreq1;
+        double normFreq2;
+        double variance = 0.0;
 
         for (int i = 0; i < data1.length; i++) {
-
+            // check to  see if the word is in both documents
+            if (wordCount2.getCount(data1[i].data) != 0) {
+                normFreq1 = data1[i].count / (double) totalWords1;
+                normFreq2 = wordCount2.getCount(data1[i].data) / (double) totalWords2;
+                if (inRange(normFreq1) && inRange(normFreq2)) {
+                    variance += (normFreq1 - normFreq2) * (normFreq1 - normFreq2);
+                }
+            }
         }
 
-        double variance = 0.0;
         // IMPORTANT: Do not change printing format. Just print the double.
         System.out.println(variance);
     }
 
-    private static boolean inRange(int count, int totalWords) {
+    private static boolean inRange(double freq) {
         double lowerBound = .0001;
         double upperBound = .01;
-        double freq = count / (double) totalWords;
         return !(freq > upperBound || freq < lowerBound);
     }
 
-    private static DataCount[] toArray(String s, int totalWords) {
-        String[] data = s.split("\\(");
-        DataCount[] dc = new DataCount[data.length];
+    private static int getTotalWordCount(DataCounter dc) {
+        String[] data = dc.toString().split("\\(");
+        int totalWords = 0;
         for (int i = 0; i < data.length; i++) {
             // data[i]: word, count)
             if (!data[i].isEmpty()) {
                 String[] pair = data[i].split(",");
                 // pair[0]:word
                 // pair[1]: count)
-                String word = pair[0];
                 // trim space and closing parenthesis
                 String count = pair[1].substring(1, pair[1].length() - 1);
-                int iCount = Integer.parseInt(count);
-                totalWords += iCount;
-                dc[i] = new DataCount(word, iCount);
+                totalWords += Integer.parseInt(count);
             }
         }
-        return dc;
+        return totalWords;
     }
 }
