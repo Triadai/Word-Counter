@@ -8,7 +8,6 @@ import providedCode.*;
  * @studentID <id number>
  * @email <email address>
  * <p/>
- * TODO: Replace this comment with your own as appropriate.
  * <p/>
  * 1. You may implement HashTable with separate chaining discussed in
  * class; the only restriction is that it should not restrict the size of
@@ -31,7 +30,6 @@ import providedCode.*;
  * only hard code the prime numbers that are going to be used. Do NOT
  * copy the whole list!
  * <p/>
- * TODO: Develop appropriate tests for your HashTable.
  */
 public class HashTable_SC extends DataCounter {
 
@@ -113,8 +111,7 @@ public class HashTable_SC extends DataCounter {
     public int getCount(String data) {
         int index = hash(data);
         if (table[index] == null) {
-            System.err.println(data + " is not in the table");
-            return -1;
+            return 0;
         }
         Node currNode = table[index];
         while (currNode != null) {
@@ -123,8 +120,7 @@ public class HashTable_SC extends DataCounter {
             }
             currNode = currNode.next;
         }
-        System.err.println(data + " is not in the table");
-        return -1;
+        return 0;
     }
 
     private int hash(String data) {
@@ -167,6 +163,5 @@ public class HashTable_SC extends DataCounter {
         }
 
     }
-
 
 }

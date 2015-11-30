@@ -8,7 +8,6 @@ import providedCode.*;
  * @studentID <id number>
  * @email <email address>
  * <p/>
- * TODO: REPLACE this comment with your own as appropriate.
  * <p/>
  * 1. This comparator is used by the provided code for both data-counters
  * and sorting. Because of how the output must be sorted in the case of
@@ -29,9 +28,6 @@ import providedCode.*;
  */
 public class StringComparator implements Comparator<String> {
 
-    /**
-     * TODO Replace this comment with your own as appropriate.
-     */
     @Override
     public int compare(String s1, String s2) {
         // case 1 they are the same
