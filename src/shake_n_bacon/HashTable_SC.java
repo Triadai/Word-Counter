@@ -91,7 +91,12 @@ public class HashTable_SC extends DataCounter {
                 }
                 currNode = currNode.next;
             }
-            currNode.next = new Node(data);
+            if (c.compare(currNode.data.data, data) == 0) {
+                currNode.data.count++;
+                return;
+            } else {
+                currNode.next = new Node(data);
+            }
         }
         size++;
         if (size / (double) table.length >= loadFactor) {
