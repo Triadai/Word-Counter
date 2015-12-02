@@ -81,6 +81,7 @@ public class Correlator {
             usage();
         }
 
+        // get words in the tables
         countWords(args[1], wordCount1);
         countWords(args[2], wordCount2);
 
@@ -102,9 +103,11 @@ public class Correlator {
         double normFreq2;
         double variance = 0.0;
 
+        // loop through every word
         for (int i = 0; i < data1.length; i++) {
             // check to  see if the word is in both documents
             if (wordCount2.getCount(data1[i].data) != 0) {
+                // calculate normal frequency for both
                 normFreq1 = data1[i].count / (double) totalWords1;
                 normFreq2 = wordCount2.getCount(data1[i].data) / (double) totalWords2;
                 if (inRange(normFreq1) && inRange(normFreq2)) {

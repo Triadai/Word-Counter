@@ -63,7 +63,7 @@ public class MainTest {
             }
         }
 
-        testDataCounters("romeo.txt");
+        // test the tables on 2 different texts
         testDataCounters("hamlet.txt");
         testDataCounters("the-new-atlantis.txt");
     }

@@ -56,6 +56,7 @@ public class HashTable_SC extends DataCounter {
         SimpleIterator si = getIterator();
         table = newTable;
         while (si.hasNext()) {
+            // rehash words
             insert(si.next());
         }
     }
@@ -63,9 +64,11 @@ public class HashTable_SC extends DataCounter {
     private void insert(DataCount data) {
         int index = hash(data.data);
         if (table[index] == null) {
+            // create first node for that index
             Node n = new Node(data);
             table[index] = n;
         } else {
+            // add node to the chain
             Node currNode = table[index];
             while (currNode.next != null) {
                 currNode = currNode.next;
@@ -77,12 +80,15 @@ public class HashTable_SC extends DataCounter {
     @Override
     public void incCount(String data) {
         int index = hash(data);
+        // check if index is empty
         if (table[index] == null) {
             Node n = new Node(data);
             table[index] = n;
         } else {
+            // loop through nodes
             Node currNode = table[index];
             while (currNode.next != null) {
+                // check if the word already is in the table
                 if (c.compare(currNode.data.data, data) == 0) {
                     currNode.data.count++;
                     return;
@@ -93,10 +99,15 @@ public class HashTable_SC extends DataCounter {
                 currNode.data.count++;
                 return;
             } else {
+                // if after looping no node was found for the word it does not exist
+                // so make it and add it to the linked list
                 currNode.next = new Node(data);
             }
         }
+        // if the function has not returned already a new node has been added
+        // so increment the size
         size++;
+        // make sure table does not get too big
         if (size / (double) table.length >= loadFactor) {
             doubleTable();
         }
@@ -111,8 +122,10 @@ public class HashTable_SC extends DataCounter {
     public int getCount(String data) {
         int index = hash(data);
         if (table[index] == null) {
+            // not in table
             return 0;
         }
+        // search for the word in the linked list
         Node currNode = table[index];
         while (currNode != null) {
             if (c.compare(currNode.data.data, data) == 0) {
@@ -120,6 +133,7 @@ public class HashTable_SC extends DataCounter {
             }
             currNode = currNode.next;
         }
+        // not in table
         return 0;
     }
 
@@ -132,6 +146,7 @@ public class HashTable_SC extends DataCounter {
         DataCount[] data = new DataCount[size];
         int count = 0;
         int i = 0;
+        // get all words
         while (true) {
             if (count < data.length) {
                 if (table[i] != null) {

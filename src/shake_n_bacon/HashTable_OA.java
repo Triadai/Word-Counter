@@ -57,20 +57,24 @@ public class HashTable_OA extends DataCounter {
         DataCount[] newTable = new DataCount[nextPrime()];
         SimpleIterator si = getIterator();
         table = newTable;
+        // insert all the values back into new table
         while (si.hasNext()) {
             insert(si.next());
         }
     }
 
     private void insert(DataCount data) {
+        // rehash
         int index = hash(data.data);
         int nextIndex = index;
         int count = 0;
         while (count < table.length) {
             if (table[nextIndex] == null) {
                 table[nextIndex] = data;
+                // after inserting data stop looping
                 return;
             }
+            // go one to the right
             nextIndex = (nextIndex + probe) % table.length;
             count++;
         }
@@ -84,16 +88,18 @@ public class HashTable_OA extends DataCounter {
         while (count < table.length) {
             if (table[nextIndex] == null) {
                 table[nextIndex] = new DataCount(data, 1);
+                // only increase size when adding a DataCount object to the table
                 size++;
                 break;
             } else if (c.compare(table[nextIndex].data, data) == 0) {
+                // if the word is already in table increment count
                 table[nextIndex].count++;
                 return;
             }
             nextIndex = (nextIndex + probe) % table.length;
             count++;
         }
-
+        // check load and see if it is above the load factor
         if (size / (double) table.length >= loadFactor) {
             doubleTable();
         }
@@ -108,22 +114,27 @@ public class HashTable_OA extends DataCounter {
     public int getCount(String data) {
         int index = hash(data);
         if (table[index] == null) {
+            // word not in table
             return 0;
         }
         int nextIndex = index;
         int count = 0;
+        // search for index of word
         while (count < table.length) {
             if (c.compare(table[nextIndex].data, data) == 0) {
+                // found word
                 return table[nextIndex].count;
             }
+            // go to the next index
             nextIndex = (index + probe) % table.length;
             count++;
         }
-
+        // word not in table
         return 0;
     }
 
     private int hash(String data) {
+        // make sure hash does not return an int bigger than the length of the table
         return h.hash(data) % table.length;
     }
 
@@ -132,6 +143,7 @@ public class HashTable_OA extends DataCounter {
         DataCount[] data = new DataCount[size];
         int count = 0;
         int i = 0;
+        // get all the words from the table and store them in an array
         while (true) {
             if (count < data.length) {
                 if (table[i] != null) {
