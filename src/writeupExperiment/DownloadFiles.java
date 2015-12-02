@@ -16,6 +16,7 @@ import java.nio.channels.ReadableByteChannel;
 public class DownloadFiles {
     public static void main(String[] args) {
         try {
+            int filesToDownload = 100;
             Document doc = Jsoup.connect("http://www.textfiles.com/etext/FICTION/").get();
             // get all anchor tags on the page (all of them are book links)
             Elements as = doc.getElementsByTag("a");
@@ -23,6 +24,9 @@ public class DownloadFiles {
             String name;
             String base = "http://www.textfiles.com/etext/FICTION/";
             for (int i = 0; i < as.size(); i++) {
+                if (i > filesToDownload) {
+                    break;
+                }
                 name = as.get(i).attr("href");
                 // get the link to the text
                 link = base + name;
