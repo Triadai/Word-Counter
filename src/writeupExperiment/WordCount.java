@@ -27,58 +27,23 @@ public class WordCount {
         return data;
     }
 
-    // ////////////////////////////////////////////////////////////////////////
-    // /////////////// DO NOT MODIFY ALL THE METHODS BELOW ///////////////////
-    // ////////////////////////////////////////////////////////////////////////
-
-    private static void countWords(String file, DataCounter counter) {
+    private static long countWords(String file, DataCounter counter) {
         try {
             FileWordReader reader = new FileWordReader(file);
             String word = reader.nextWord();
+            long st = System.currentTimeMillis();
             while (word != null) {
                 counter.incCount(word);
                 word = reader.nextWord();
             }
+            return System.currentTimeMillis() - st;
         } catch (IOException e) {
             System.err.println("Error processing " + file + " " + e);
             System.exit(1);
         }
+        return -1;
     }
 
-    // IMPORTANT: Used for grading. Do not modify the printing *format*!
-    private static void printDataCount(DataCount[] counts) {
-        for (DataCount c : counts) {
-            System.out.println(c.count + "\t" + c.data);
-        }
-    }
-
-    /*
-     * Sort the count array in descending order of count. If two elements have
-     * the same count, they should be ordered according to the comparator. This
-     * code uses insertion sort. The code is generic, but in this project we use
-     * it with DataCount and DataCountStringComparator.
-     *
-     * @param counts array to be sorted.
-     *
-     * @param comparator for comparing elements.
-     */
-    private static <E> void insertionSort(E[] array, Comparator<E> comparator) {
-        for (int i = 1; i < array.length; i++) {
-            E x = array[i];
-            int j;
-            for (j = i - 1; j >= 0; j--) {
-                if (comparator.compare(x, array[j]) >= 0) {
-                    break;
-                }
-                array[j + 1] = array[j];
-            }
-            array[j + 1] = x;
-        }
-    }
-
-    /*
-     * Print error message and exit
-     */
     private static void usage() {
         System.err
                 .println("Usage: [-s | -o] <filename of document to analyze>");
@@ -92,7 +57,7 @@ public class WordCount {
      *
      * @param args the input arguments of this program
      */
-    public static void main(String[] args) {
+    public static double[] main(String[] args) {
         if (args.length != 2) {
             usage();
         }
@@ -109,10 +74,16 @@ public class WordCount {
             usage();
         }
 
-        countWords(args[1], counter);
+        double insert = countWords(args[1], counter);
         DataCount[] counts = getCountsArray(counter);
-        insertionSort(counts, new DataCountStringComparator());
-        // comment out the print statement to clear the console
-//        printDataCount(counts);
+
+        long st = System.currentTimeMillis();
+        for (DataCount dc : counts) {
+            counter.getCount(dc.data);
+        }
+        double avgLookup = (System.currentTimeMillis() - st) / (double) counter.getSize();
+
+        return new double[]{insert, avgLookup};
     }
+
 }
